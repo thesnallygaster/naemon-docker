@@ -28,24 +28,9 @@ RUN cd /build && \
 	DESTDIR=/build/target make install && \
 	rm -r /build/target/etc/naemon/conf.d/printer.cfg && \
 	rm -r /build/target/etc/naemon/conf.d/switch.cfg && \
-	rm -r /build/target/etc/naemon/conf.d/windows.cfg && \
-	sed -i 's/log_file=.*/log_file=\/var\/log\/naemon\/naemon.log/g' /build/target/etc/naemon/naemon.cfg && \
-	sed -i 's/cfg_dir=.*/cfg_dir=\/etc\/naemon\/conf.d/g' /build/target/etc/naemon/naemon.cfg && \
-	sed -i 's/object_cache_file=.*/object_cache_file=\/var\/cache\/naemon\/objects.cache/g' /build/target/etc/naemon/naemon.cfg && \
-	sed -i 's/precached_object_file=.*/precached_object_file=\/var\/cache\/naemon\/objects.precache/g' /build/target/etc/naemon/naemon.cfg && \
-	sed -i 's/resource_file=.*/resource_file=\/etc\/naemon\/resource.cfg/g' /build/target/etc/naemon/naemon.cfg && \
-	sed -i 's/status_file=.*/status_file=\/var\/cache\/naemon\/status.dat/g' /build/target/etc/naemon/naemon.cfg && \
-	sed -i 's/command_file=.*/command_file=\/var\/lib\/naemon\/naemon.cmd/g' /build/target/etc/naemon/naemon.cfg && \
-	sed -i 's/lock_file=.*/lock_file=\/run\/naemon\/naemon.pid/g' /build/target/etc/naemon/naemon.cfg && \
-	sed -i 's/temp_file=.*/temp_file=\/var\/lib\/naemon\/naemon.tmp/g' /build/target/etc/naemon/naemon.cfg && \
-	sed -i 's/temp_path=.*/temp_path=\/var\/cache\/naemon/g' /build/target/etc/naemon/naemon.cfg && \
-	sed -i 's/log_archive_path=.*/log_archive_path=\/var\/log\/naemon\/archives/g' /build/target/etc/naemon/naemon.cfg && \
-	sed -i 's/check_result_path=.*/check_result_path=\/var\/cache\/naemon\/checkresults/g' /build/target/etc/naemon/naemon.cfg && \
-	sed -i 's/state_retention_file=.*/state_retention_file=\/var\/lib\/naemon\/retention.dat/g' /build/target/etc/naemon/naemon.cfg && \
-	sed -i 's/host_perfdata_file=.*/host_perfdata_file=\/var\/lib\/naemon\/host-perfdata/g' /build/target/etc/naemon/naemon.cfg && \
-	sed -i 's/service_perfdata_file=.*/service_perfdata_file=\/var\/lib\/naemon\/service-perfdata/g' /build/target/etc/naemon/naemon.cfg && \
-	sed -i 's/debug_file=.*/debug_file=\/var\/lib\/naemon\/naemon.debug/g' /build/target/etc/naemon/naemon.cfg && \
-	cd /build && \
+	rm -r /build/target/etc/naemon/conf.d/windows.cfg
+COPY templates/naemon.cfg /build/target/etc/naemon/naemon.cfg
+RUN cd /build && \
 	curl -sSL -o naemon-livestatus-v${NAEMON_VERSION}.tar.gz https://github.com/naemon/naemon-livestatus/archive/refs/tags/v${NAEMON_VERSION}.tar.gz && \
 	tar -xzf naemon-livestatus-v${NAEMON_VERSION}.tar.gz && \
 	cd /build/naemon-livestatus-${NAEMON_VERSION} && \
@@ -55,10 +40,8 @@ RUN cd /build && \
 	mkdir -p /build/target && \
 	DESTDIR=/build/target make install && \
 	mkdir -p /build/target/etc/naemon/module-conf.d && \
-	cp -r /build/target./livestatus.cfg /build/target/etc/naemon/module-conf.d/livestatus.cfg && \
-	sed -i 's/\/usr\/local\/lib/\/usr\/lib/g' /build/target/etc/naemon/module-conf.d/livestatus.cfg && \
-	sed -i 's/\/var\/cache\/naemon\/live/inet_addr=0.0.0.0:6666/g' /build/target/etc/naemon/module-conf.d/livestatus.cfg && \
 	rm -rf /var/lib/apt/lists/*
+COPY templates/livestatus.cfg /build/target/etc/naemon/module-conf.d/livestatus.cfg
 
 FROM ubuntu:${UBUNTU_VERSION} AS final
 ARG APT_PROXY
