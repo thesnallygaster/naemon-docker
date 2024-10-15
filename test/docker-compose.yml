@@ -6,8 +6,8 @@ services:
     container_name : ${NAEMON_CONTAINER:-naemon}
     hostname: naemon
     ports:
-      - target: 6666
-        published: 6666
+      - target: 6557
+        published: 6557
         protocol: tcp
     volumes:
       - ./localhost.cfg:/etc/naemon/conf.d/localhost.cfg
