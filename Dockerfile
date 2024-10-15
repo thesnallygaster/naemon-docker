@@ -55,6 +55,9 @@ RUN if [ -n "$APT_PROXY" ]; then \
     fi
 RUN apt update -y  && apt install -y \
 	libglib2.0-bin \
+	msmtp \
+	msmtp-mta \
+	bsd-mailx \
 	monitoring-plugins \
 	monitoring-plugins-contrib  && \
 	rm -rf /var/lib/apt/lists/*
