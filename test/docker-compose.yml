@@ -1,0 +1,17 @@
+name: naemon
+
+services:
+  naemon:
+    image: ${NAEMON_IMAGE:-thesnallygaster/naemon:latest}
+    container_name : ${NAEMON_CONTAINER:-naemon}
+    hostname: naemon
+    ports:
+      - target: 6666
+        published: 6666
+        protocol: tcp
+    volumes:
+      - naemon_data:/var/lib/naemon
+    restart: always
+
+volumes:
+  naemon_data:
