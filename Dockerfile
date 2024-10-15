@@ -26,10 +26,10 @@ RUN cd /build && \
 	make -j"$(nproc)" && \
 	mkdir -p /build/target && \
 	DESTDIR=/build/target make install && \
+	rm -r /build/target/etc/naemon/conf.d/localhost.cfg && \
 	rm -r /build/target/etc/naemon/conf.d/printer.cfg && \
 	rm -r /build/target/etc/naemon/conf.d/switch.cfg && \
 	rm -r /build/target/etc/naemon/conf.d/windows.cfg
-COPY templates/localhost.cfg /build/target/etc/naemon/conf.d/localhost.cfg
 COPY templates/naemon.cfg /build/target/etc/naemon/naemon.cfg
 RUN cd /build && \
 	curl -sSL -o naemon-livestatus-v${NAEMON_VERSION}.tar.gz https://github.com/naemon/naemon-livestatus/archive/refs/tags/v${NAEMON_VERSION}.tar.gz && \

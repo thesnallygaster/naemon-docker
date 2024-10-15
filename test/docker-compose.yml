@@ -10,6 +10,7 @@ services:
         published: 6666
         protocol: tcp
     volumes:
+      - ./localhost.cfg:/etc/naemon/conf.d/localhost.cfg
       - naemon_data:/var/lib/naemon
     restart: always
 
