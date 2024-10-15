@@ -60,7 +60,8 @@ RUN apt update -y  && apt install -y \
 COPY --from=build /build/target/etc /etc
 COPY --from=build /build/target/usr /usr
 COPY --from=build /build/target/var /var
-RUN mkdir -p /var/lib/naemon && \
+RUN mkdir -p /var/lib/naemon \
+	/etc/naemon/local && \
 	chown -R 999:999 /etc/naemon \
 	/var/lib/naemon \
 	/var/cache/naemon \
@@ -68,7 +69,7 @@ RUN mkdir -p /var/lib/naemon && \
 	mkdir -p /usr/lib/naemon && \
 	ln -s /usr/lib/nagios/plugins /usr/lib/naemon/plugins
 WORKDIR /var/lib/naemon
-VOLUME /var/lib/naemon /var/cache/naemon /var/log/naemon
+VOLUME /etc/naemon/local /var/lib/naemon /var/cache/naemon /var/log/naemon
 EXPOSE 6666
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
