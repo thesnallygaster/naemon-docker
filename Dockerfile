@@ -84,6 +84,7 @@ RUN mkdir -p /var/lib/naemon && \
 	mkdir -p /usr/lib/naemon && \
 	ln -s /usr/lib/nagios/plugins /usr/lib/naemon/plugins
 WORKDIR /var/lib/naemon
+VOLUME /var/lib/naemon /var/cache/naemon /var/log/naemon
 EXPOSE 6666
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
