@@ -31,6 +31,7 @@ RUN cd /build && \
 	rm -r /build/target/etc/naemon/conf.d/switch.cfg && \
 	rm -r /build/target/etc/naemon/conf.d/windows.cfg
 COPY templates/naemon.cfg /build/target/etc/naemon/naemon.cfg
+COPY templates/resource.cfg /build/target/etc/naemon/resource.cfg
 RUN cd /build && \
 	curl -sSL -o naemon-livestatus-v${NAEMON_VERSION}.tar.gz https://github.com/naemon/naemon-livestatus/archive/refs/tags/v${NAEMON_VERSION}.tar.gz && \
 	tar -xzf naemon-livestatus-v${NAEMON_VERSION}.tar.gz && \
@@ -61,7 +62,8 @@ COPY --from=build /build/target/etc /etc
 COPY --from=build /build/target/usr /usr
 COPY --from=build /build/target/var /var
 RUN mkdir -p /var/lib/naemon \
-	/etc/naemon/local && \
+	/etc/naemon/local \
+	/opt/plugins && \
 	chown -R 999:999 /etc/naemon \
 	/var/lib/naemon \
 	/var/cache/naemon \
@@ -69,7 +71,7 @@ RUN mkdir -p /var/lib/naemon \
 	mkdir -p /usr/lib/naemon && \
 	ln -s /usr/lib/nagios/plugins /usr/lib/naemon/plugins
 WORKDIR /var/lib/naemon
-VOLUME /etc/naemon/local /var/lib/naemon /var/cache/naemon /var/log/naemon
+VOLUME /etc/naemon/local /opt/plugins /var/lib/naemon /var/cache/naemon /var/log/naemon
 EXPOSE 6666
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
