@@ -57,8 +57,8 @@ RUN cd /build && \
 	mkdir -p /build/target/etc/naemon/module-conf.d && \
 	cp -r /build/target./livestatus.cfg /build/target/etc/naemon/module-conf.d/livestatus.cfg && \
 	sed -i 's/\/usr\/local\/lib/\/usr\/lib/g' /build/target/etc/naemon/module-conf.d/livestatus.cfg && \
-	sed -i 's/\/var\/cache\/naemon\/live/inet_addr=0.0.0.0:6666/g' /build/target/etc/naemon/module-conf.d/livestatus.cfg
-RUN apt clean
+	sed -i 's/\/var\/cache\/naemon\/live/inet_addr=0.0.0.0:6666/g' /build/target/etc/naemon/module-conf.d/livestatus.cfg && \
+	rm -rf /var/lib/apt/lists/*
 
 FROM ubuntu:${UBUNTU_VERSION} AS final
 ARG APT_PROXY
