@@ -71,7 +71,8 @@ RUN if [ -n "$APT_PROXY" ]; then \
 RUN apt update -y  && apt install -y \
 	libglib2.0-bin \
 	monitoring-plugins \
-	monitoring-plugins-contrib
+	monitoring-plugins-contrib  && \
+	rm -rf /var/lib/apt/lists/*
 COPY --from=build /build/target/etc /etc
 COPY --from=build /build/target/usr /usr
 COPY --from=build /build/target/var /var
