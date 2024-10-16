@@ -8,10 +8,12 @@ WORKDIR /build
 RUN if [ -n "$APT_PROXY" ]; then \
         echo "Acquire::http::Proxy \"$APT_PROXY\";" > /etc/apt/apt.conf.d/01proxy; \
     fi
-RUN apt update -y && apt install -y \
+RUN apt update -y && apt install --no-install-recommends -y \
 	build-essential \
+	ca-certificates \
 	curl \
 	autoconf \
+	automake \
 	libtool \
 	libglib2.0-dev \
 	help2man \
@@ -56,7 +58,8 @@ RUN groupadd -g 999 naemon && \
 RUN if [ -n "$APT_PROXY" ]; then \
         echo "Acquire::http::Proxy \"$APT_PROXY\";" > /etc/apt/apt.conf.d/01proxy; \
     fi
-RUN apt update -y  && apt install -y \
+RUN apt update -y  && apt install --no-install-recommends -y \
+	ca-certificates \
 	libglib2.0-bin \
 	msmtp \
 	msmtp-mta \
