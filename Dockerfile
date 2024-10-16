@@ -64,8 +64,8 @@ RUN apt update -y  && apt install --no-install-recommends -y \
 	msmtp \
 	msmtp-mta \
 	bsd-mailx \
-	monitoring-plugins \
-	monitoring-plugins-contrib  && \
+	monitoring-plugins-basic \
+	nagios-nrpe-plugin && \
 	rm -rf /var/lib/apt/lists/*
 COPY --from=build /build/target/etc /etc
 COPY --from=build /build/target/usr /usr
