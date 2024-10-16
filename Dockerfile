@@ -30,6 +30,7 @@ RUN cd /build && \
 	rm -r /build/target/etc/naemon/conf.d/printer.cfg && \
 	rm -r /build/target/etc/naemon/conf.d/switch.cfg && \
 	rm -r /build/target/etc/naemon/conf.d/windows.cfg
+COPY templates/hostgroups.cfg /build/target/etc/naemon/conf.d/templates/hostgroups.cfg
 COPY templates/naemon.cfg /build/target/etc/naemon/naemon.cfg
 COPY templates/resource.cfg /build/target/etc/naemon/resource.cfg
 RUN cd /build && \
