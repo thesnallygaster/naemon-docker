@@ -70,19 +70,13 @@ RUN apt update -y  && apt install --no-install-recommends -y \
 COPY --from=build /build/target/etc /etc
 COPY --from=build /build/target/usr /usr
 COPY --from=build /build/target/var /var
-RUN mkdir -p /var/lib/naemon \
-	/etc/naemon/local \
+RUN mkdir -p /etc/naemon/local \
 	/opt/plugins && \
-	chown -R 999:999 /etc/naemon \
-	/var/lib/naemon \
-	/var/cache/naemon \
-	/var/log/naemon && \
 	mkdir -p /usr/lib/naemon && \
 	ln -s /usr/lib/nagios/plugins /usr/lib/naemon/plugins
-WORKDIR /var/lib/naemon
 VOLUME /var/lib/naemon /var/cache/naemon
+WORKDIR /var/lib/naemon
 EXPOSE 6557
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-USER 999
 ENTRYPOINT [ "/entrypoint.sh" ]
