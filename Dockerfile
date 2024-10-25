@@ -74,7 +74,7 @@ RUN mkdir -p /etc/naemon/local \
 	/opt/plugins && \
 	mkdir -p /usr/lib/naemon && \
 	ln -s /usr/lib/nagios/plugins /usr/lib/naemon/plugins
-VOLUME /var/lib/naemon /var/cache/naemon
+VOLUME /var/lib/naemon /var/cache/naemon /var/log/naemon
 WORKDIR /var/lib/naemon
 EXPOSE 6557
 COPY entrypoint.sh /entrypoint.sh
