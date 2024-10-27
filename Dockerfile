@@ -2,6 +2,9 @@ ARG NAEMON_VERSION="1.4.2"
 ARG UBUNTU_VERSION="noble"
 
 FROM ubuntu:${UBUNTU_VERSION} AS build
+RUN touch /var/mail/ubuntu && \
+	chown ubuntu /var/mail/ubuntu && \
+	userdel -r ubuntu
 ARG APT_PROXY
 WORKDIR /build
 # Create an apt proxy configuration
@@ -52,6 +55,9 @@ COPY templates/livestatus.cfg /build/target/etc/naemon/module-conf.d/livestatus.
 
 FROM ubuntu:${UBUNTU_VERSION} AS final
 ARG APT_PROXY
+RUN touch /var/mail/ubuntu && \
+	chown ubuntu /var/mail/ubuntu && \
+	userdel -r ubuntu
 RUN groupadd -g 1000 naemon && \
 	useradd -c "naemon user" -g 1000 -M -d /var/lib/naemon -s /bin/false -u 1000 naemon
 # Create an apt proxy configuration
