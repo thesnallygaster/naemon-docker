@@ -1,0 +1,23 @@
+diff -ura naemon-core-1.4.2.orig/lib/kvvec.h naemon-core-1.4.2.new/lib/kvvec.h
+--- naemon-core-1.4.2.orig/lib/kvvec.h	2024-10-26 10:36:46.363364548 +0200
++++ naemon-core-1.4.2.new/lib/kvvec.h	2024-10-26 11:08:53.275782863 +0200
+@@ -5,6 +5,8 @@
+ #error "Only <naemon/naemon.h> can be included directly."
+ #endif
+
++#include <sys/time.h>
++
+ #include "lnae-utils.h"
+
+ NAGIOS_BEGIN_DECL
+diff -ura naemon-core-1.4.2.orig/src/naemon/events.h naemon-core-1.4.2.new/src/naemon/events.h
+--- naemon-core-1.4.2.orig/src/naemon/events.h	2024-10-26 10:36:46.449365453 +0200
++++ naemon-core-1.4.2.new/src/naemon/events.h	2024-10-26 11:08:47.717719475 +0200
+@@ -5,6 +5,8 @@
+ #error "Only <naemon/naemon.h> can be included directly."
+ #endif
+
++#include <sys/time.h>
++
+ #include "lib/lnae-utils.h"
+ #include "lib/iobroker.h"
