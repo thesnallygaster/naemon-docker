@@ -30,3 +30,11 @@ target "image-all" {
     "linux/amd64",
   ]
 }
+
+target "image-all-alpine" {
+  inherits = ["image"]
+  dockerfile = "Dockerfile.alpine"
+  platforms = [
+    "linux/amd64",
+  ]
+}

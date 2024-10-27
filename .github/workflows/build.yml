@@ -27,8 +27,8 @@ jobs:
         name: Checkout
         uses: actions/checkout@v4
       -
-        name: Docker meta
-        id: meta
+        name: Docker meta (ubuntu)
+        id: meta-ubuntu
         uses: docker/metadata-action@v5
         with:
           images: |
@@ -38,6 +38,22 @@ jobs:
             type=match,pattern=(.*)-.*,group=1
             type=ref,event=pr
             type=edge
+          labels: |
+            org.opencontainers.image.title=naemon-docker
+            org.opencontainers.image.description=Dockerized installation of naemon
+            org.opencontainers.image.vendor=thesnallygaster
+      -
+        name: Docker meta (alpine)
+        id: meta-alpine
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.DOCKERHUB_SLUG }}
+          tags: |
+            type=match,pattern=(.*),group=1,suffix=-alpine
+            type=match,pattern=(.*)-.*,group=1,suffix=-alpine
+            type=ref,event=pr,suffix=-alpine
+            type=edge,suffix=-alpine
           labels: |
             org.opencontainers.image.title=naemon-docker
             org.opencontainers.image.description=Dockerized installation of naemon
@@ -61,17 +77,29 @@ jobs:
         with:
           files: |
             ./docker-bake.hcl
-            ${{ steps.meta.outputs.bake-file }}
-          targets: image-all
+            ${{ steps.meta-ubuntu.outputs.bake-file }}
+            ${{ steps.meta-alpine.outputs.bake-file }}
+          targets: image-all,image-all-alpine
           push: ${{ github.event_name != 'pull_request' }}
       -
-        name: Check manifest
+        name: Check manifest (ubuntu)
         if: github.event_name != 'pull_request'
         run: |
-          docker buildx imagetools inspect ${{ env.DOCKERHUB_SLUG }}:${{ steps.meta.outputs.version }}
+          docker buildx imagetools inspect ${{ env.DOCKERHUB_SLUG }}:${{ steps.meta-ubuntu.outputs.version }}
       -
-        name: Inspect
+        name: Check manifest (alpine)
         if: github.event_name != 'pull_request'
         run: |
-          docker pull ${{ env.DOCKERHUB_SLUG }}:${{ steps.meta.outputs.version }}
-          docker image inspect ${{ env.DOCKERHUB_SLUG }}:${{ steps.meta.outputs.version }}
+          docker buildx imagetools inspect ${{ env.DOCKERHUB_SLUG }}:${{ steps.meta-alpine.outputs.version }}
+      -
+        name: Inspect (ubuntu)
+        if: github.event_name != 'pull_request'
+        run: |
+          docker pull ${{ env.DOCKERHUB_SLUG }}:${{ steps.meta-ubuntu.outputs.version }}
+          docker image inspect ${{ env.DOCKERHUB_SLUG }}:${{ steps.meta-ubuntu.outputs.version }}
+      -
+        name: Inspect (alpine)
+        if: github.event_name != 'pull_request'
+        run: |
+          docker pull ${{ env.DOCKERHUB_SLUG }}:${{ steps.meta-alpine.outputs.version }}
+          docker image inspect ${{ env.DOCKERHUB_SLUG }}:${{ steps.meta-alpine.outputs.version }}
