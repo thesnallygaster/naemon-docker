@@ -52,8 +52,8 @@ COPY templates/livestatus.cfg /build/target/etc/naemon/module-conf.d/livestatus.
 
 FROM ubuntu:${UBUNTU_VERSION} AS final
 ARG APT_PROXY
-RUN groupadd -g 999 naemon && \
-	useradd -c "naemon user" -g 999 -M -d /var/lib/naemon -s /bin/false -u 999 naemon
+RUN groupadd -g 1000 naemon && \
+	useradd -c "naemon user" -g 1000 -M -d /var/lib/naemon -s /bin/false -u 1000 naemon
 # Create an apt proxy configuration
 RUN if [ -n "$APT_PROXY" ]; then \
         echo "Acquire::http::Proxy \"$APT_PROXY\";" > /etc/apt/apt.conf.d/01proxy; \
