@@ -13,4 +13,4 @@ chown -R naemon:naemon /etc/naemon /var/cache/naemon /var/lib/naemon /var/log/na
 runuser -P -u naemon -- /usr/bin/naemon -v /etc/naemon/naemon.cfg
 
 # run naemon as naemon user
-exec runuser -P -u naemon -- /usr/bin/naemon /etc/naemon/naemon.cfg
+exec stdbuf -o0 -e0 runuser -P -u naemon -- /usr/bin/naemon /etc/naemon/naemon.cfg
