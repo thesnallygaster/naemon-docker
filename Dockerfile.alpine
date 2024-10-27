@@ -1,0 +1,80 @@
+ARG NAEMON_VERSION="1.4.2"
+ARG ALPINE_VERSION="3.20"
+
+FROM alpine:${ALPINE_VERSION} AS build
+WORKDIR /build
+RUN apk update && apk upgrade --no-cache && apk add --no-cache \
+	build-base \
+	ca-certificates \
+	curl \
+	autoconf \
+	automake \
+	libtool \
+	glib-dev \
+	help2man \
+	gperf
+ARG NAEMON_VERSION
+COPY files/naemon-core_include_time_h.patch /build/naemon-core_include_time_h.patch
+RUN cd /build && \
+	curl -sSL -o naemon-core-v${NAEMON_VERSION}.tar.gz https://github.com/naemon/naemon-core/archive/refs/tags/v${NAEMON_VERSION}.tar.gz && \
+	tar -xzf naemon-core-v${NAEMON_VERSION}.tar.gz && \
+	cd /build/naemon-core-${NAEMON_VERSION} && \
+	patch --strip=1 --input=../naemon-core_include_time_h.patch && \
+	./autogen.sh && \
+	./configure --prefix="" --exec-prefix=/usr --localstatedir=/var/lib/naemon --runstatedir=/run/naemon --includedir=/usr/include --datarootdir=/usr/share --with-tempdir=/var/cache/naemon --with-checkresultdir=/var/cache/naemon/checkresults --with-lockfile=/run/naemon/naemon.pid --with-logdir=/var/log/naemon && \
+	make -j"$(nproc)" && \
+	mkdir -p /build/target && \
+	DESTDIR=/build/target make install && \
+	rm -r /build/target/etc/naemon/conf.d/localhost.cfg && \
+	rm -r /build/target/etc/naemon/conf.d/printer.cfg && \
+	rm -r /build/target/etc/naemon/conf.d/switch.cfg && \
+	rm -r /build/target/etc/naemon/conf.d/windows.cfg
+COPY templates/hostgroups.cfg /build/target/etc/naemon/conf.d/templates/hostgroups.cfg
+COPY templates/hosts.cfg /build/target/etc/naemon/conf.d/templates/hosts.cfg
+COPY templates/services.cfg /build/target/etc/naemon/conf.d/templates/services.cfg
+COPY templates/naemon.cfg /build/target/etc/naemon/naemon.cfg
+COPY templates/resource.cfg /build/target/etc/naemon/resource.cfg
+RUN cd /build && \
+	curl -sSL -o naemon-livestatus-v${NAEMON_VERSION}.tar.gz https://github.com/naemon/naemon-livestatus/archive/refs/tags/v${NAEMON_VERSION}.tar.gz && \
+	tar -xzf naemon-livestatus-v${NAEMON_VERSION}.tar.gz && \
+	cd /build/naemon-livestatus-${NAEMON_VERSION} && \
+	NAEMON_CFLAGS="-I/build/target/usr/include -I/usr/include -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include" NAEMON_LIBS="-L/build/target/usr/lib -L/usr/lib -lnaemon -ldl -lm -lglib-2.0" ./autogen.sh && \
+	NAEMON_CFLAGS="-I/build/target/usr/include -I/usr/include -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include" NAEMON_LIBS="-L/build/target/usr/lib -L/usr/lib -lnaemon -ldl -lm -lglib-2.0" ./configure --prefix="" --exec-prefix=/usr --localstatedir=/var/lib/naemon --runstatedir=/run/naemon --includedir=/usr/include --datarootdir=/usr/share --with-tempdir=/var/cache/naemon --with-checkresultdir=/var/cache/naemon/checkresults --with-lockfile=/run/naemon/naemon.pid --with-logdir=/var/log/naemon && \
+	make -j"$(nproc)" && \
+	mkdir -p /build/target && \
+	DESTDIR=/build/target make install && \
+	mkdir -p /build/target/etc/naemon/module-conf.d && \
+	rm -rf /var/lib/apt/lists/*
+COPY templates/livestatus.cfg /build/target/etc/naemon/module-conf.d/livestatus.cfg
+
+FROM alpine:${ALPINE_VERSION} AS final
+RUN addgroup -g 1000 naemon && \
+	adduser -D -H -u 1000 -G naemon -s /bin/sh -h /var/lib/naemon naemon && \
+	adduser naemon tty
+RUN mkdir -p /usr/lib/nagios && \
+	ln -s /usr/lib/monitoring-plugins /usr/lib/nagios/plugins
+RUN apk update && apk upgrade --no-cache && apk add --no-cache \
+	runuser \
+	coreutils \
+	libstdc++ \
+	ca-certificates \
+	glib \
+	msmtp \
+	mailx \
+	monitoring-plugins \
+	nrpe-plugin && \
+	ln -sf /usr/bin/msmtp /usr/bin/sendmail && \
+	ln -sf /usr/bin/msmtp /usr/sbin/sendmail
+COPY --from=build /build/target/etc /etc
+COPY --from=build /build/target/usr /usr
+COPY --from=build /build/target/var /var
+RUN mkdir -p /etc/naemon/local \
+	/opt/plugins && \
+	mkdir -p /usr/lib/naemon && \
+	ln -s /usr/lib/nagios/plugins /usr/lib/naemon/plugins
+VOLUME /var/lib/naemon /var/cache/naemon /var/log/naemon
+WORKDIR /var/lib/naemon
+EXPOSE 6557
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT [ "/entrypoint.sh" ]
