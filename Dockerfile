@@ -21,10 +21,12 @@ RUN apt update -y && apt install --no-install-recommends -y \
 	help2man \
 	gperf
 ARG NAEMON_VERSION
+COPY files/naemon-core_include_time_h.patch /build/naemon-core_include_time_h.patch
 RUN cd /build && \
 	curl -sSL -o naemon-core-v${NAEMON_VERSION}.tar.gz https://github.com/naemon/naemon-core/archive/refs/tags/v${NAEMON_VERSION}.tar.gz && \
 	tar -xzf naemon-core-v${NAEMON_VERSION}.tar.gz && \
 	cd /build/naemon-core-${NAEMON_VERSION} && \
+	patch --strip=1 --input=../naemon-core_include_time_h.patch && \
 	./autogen.sh && \
 	./configure --prefix="" --exec-prefix=/usr --localstatedir=/var/lib/naemon --runstatedir=/run/naemon --includedir=/usr/include --datarootdir=/usr/share --with-tempdir=/var/cache/naemon --with-checkresultdir=/var/cache/naemon/checkresults --with-lockfile=/run/naemon/naemon.pid --with-logdir=/var/log/naemon && \
 	make -j"$(nproc)" && \
