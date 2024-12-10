@@ -1,10 +1,7 @@
 ARG NAEMON_VERSION="1.4.3"
-ARG UBUNTU_VERSION="noble"
+ARG DEBIAN_VERSION="bookworm"
 
-FROM ubuntu:${UBUNTU_VERSION} AS build
-RUN touch /var/mail/ubuntu && \
-	chown ubuntu /var/mail/ubuntu && \
-	userdel -r ubuntu
+FROM debian:${DEBIAN_VERSION} AS build
 ARG APT_PROXY
 WORKDIR /build
 # Create an apt proxy configuration
@@ -12,6 +9,8 @@ RUN if [ -n "$APT_PROXY" ]; then \
         echo "Acquire::http::Proxy \"$APT_PROXY\";" > /etc/apt/apt.conf.d/01proxy; \
     fi
 RUN apt update -y && apt install --no-install-recommends -y \
+	perl-modules && \
+	apt install --no-install-recommends -y \
 	build-essential \
 	ca-certificates \
 	curl \
@@ -53,11 +52,8 @@ RUN cd /build && \
 	rm -rf /var/lib/apt/lists/*
 COPY templates/livestatus.cfg /build/target/etc/naemon/module-conf.d/livestatus.cfg
 
-FROM ubuntu:${UBUNTU_VERSION} AS final
+FROM debian:${DEBIAN_VERSION} AS final
 ARG APT_PROXY
-RUN touch /var/mail/ubuntu && \
-	chown ubuntu /var/mail/ubuntu && \
-	userdel -r ubuntu
 RUN groupadd -g 1000 naemon && \
 	useradd -c "naemon user" -g 1000 -M -d /var/lib/naemon -s /bin/false -u 1000 naemon
 # Create an apt proxy configuration
@@ -65,6 +61,8 @@ RUN if [ -n "$APT_PROXY" ]; then \
         echo "Acquire::http::Proxy \"$APT_PROXY\";" > /etc/apt/apt.conf.d/01proxy; \
     fi
 RUN apt update -y  && apt install --no-install-recommends -y \
+	perl-modules && \
+	apt install --no-install-recommends -y \
 	ca-certificates \
 	libglib2.0-bin \
 	msmtp \
