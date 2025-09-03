@@ -45,6 +45,7 @@ RUN cd /build && \
 	curl -sSL -o naemon-livestatus-v${NAEMON_VERSION}.tar.gz https://github.com/naemon/naemon-livestatus/archive/refs/tags/v${NAEMON_VERSION}.tar.gz && \
 	tar -xzf naemon-livestatus-v${NAEMON_VERSION}.tar.gz && \
 	cd /build/naemon-livestatus-${NAEMON_VERSION} && \
+	patch --strip=1 --input=../naemon-livestatus_include_time_h.patch && \
 	NAEMON_CFLAGS="-I/build/target/usr/include -I/usr/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include" NAEMON_LIBS="-L/build/target/usr/lib -L/usr/lib -lnaemon -ldl -lm -lglib-2.0" ./autogen.sh && \
 	NAEMON_CFLAGS="-I/build/target/usr/include -I/usr/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include" NAEMON_LIBS="-L/build/target/usr/lib -L/usr/lib -lnaemon -ldl -lm -lglib-2.0" ./configure --prefix="" --exec-prefix=/usr --localstatedir=/var/lib/naemon --runstatedir=/run/naemon --includedir=/usr/include --datarootdir=/usr/share --with-tempdir=/var/cache/naemon --with-checkresultdir=/var/cache/naemon/checkresults --with-lockfile=/run/naemon/naemon.pid --with-logdir=/var/log/naemon && \
 	make -j"$(nproc)" && \
