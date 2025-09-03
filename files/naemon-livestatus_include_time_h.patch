@@ -1,22 +1,22 @@
 diff -ura naemon-livestatus-1.4.4.orig/src/AndingFilter.h naemon-livestatus-1.4.4.new/src/AndingFilter.h
 --- naemon-livestatus-1.4.4.orig/src/AndingFilter.h	2025-09-03 11:32:41.303412986 +0200
-+++ naemon-livestatus-1.4.4.new/src/AndingFilter.h	2025-09-03 11:32:35.510116733 +0200
-@@ -5,6 +5,7 @@
- #ifndef AndingFilter_h
- #define AndingFilter_h
- 
-+#include "<sys/time.h>"
++++ naemon-livestatus-1.4.4.new/src/AndingFilter.h	2025-09-03 11:59:00.575214291 +0200
+@@ -8,6 +8,7 @@
  #include "config.h"
  
  #include "Filter.h"
++#include <ctime>
+ #include <deque>
+ 
+ class AndingFilter : public Filter
 diff -ura naemon-livestatus-1.4.4.orig/src/Filter.h naemon-livestatus-1.4.4.new/src/Filter.h
 --- naemon-livestatus-1.4.4.orig/src/Filter.h	2025-09-03 11:32:41.305183315 +0200
-+++ naemon-livestatus-1.4.4.new/src/Filter.h	2025-09-03 11:32:35.510116733 +0200
-@@ -5,6 +5,7 @@
- #ifndef Filter_h
- #define Filter_h
++++ naemon-livestatus-1.4.4.new/src/Filter.h	2025-09-03 11:59:11.015105218 +0200
+@@ -7,6 +7,7 @@
  
-+#include "<sys/time.h>"
  #include "config.h"
  
++#include <ctime>
  #include <vector>
+ #include <string>
+ #include <stdint.h>
