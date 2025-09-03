@@ -1,6 +1,6 @@
-diff -ura naemon-core-1.4.2.orig/lib/kvvec.h naemon-core-1.4.2.new/lib/kvvec.h
---- naemon-core-1.4.2.orig/lib/kvvec.h	2024-10-26 10:36:46.363364548 +0200
-+++ naemon-core-1.4.2.new/lib/kvvec.h	2024-10-26 11:08:53.275782863 +0200
+diff -ura naemon-core-1.4.4.orig/lib/kvvec.h naemon-core-1.4.4.new/lib/kvvec.h
+--- naemon-core-1.4.4.orig/lib/kvvec.h	2024-10-26 10:36:46.363364548 +0200
++++ naemon-core-1.4.4.new/lib/kvvec.h	2024-10-26 11:08:53.275782863 +0200
 @@ -5,6 +5,8 @@
  #error "Only <naemon/naemon.h> can be included directly."
  #endif
@@ -10,9 +10,9 @@ diff -ura naemon-core-1.4.2.orig/lib/kvvec.h naemon-core-1.4.2.new/lib/kvvec.h
  #include "lnae-utils.h"
 
  NAGIOS_BEGIN_DECL
-diff -ura naemon-core-1.4.2.orig/src/naemon/events.h naemon-core-1.4.2.new/src/naemon/events.h
---- naemon-core-1.4.2.orig/src/naemon/events.h	2024-10-26 10:36:46.449365453 +0200
-+++ naemon-core-1.4.2.new/src/naemon/events.h	2024-10-26 11:08:47.717719475 +0200
+diff -ura naemon-core-1.4.4.orig/src/naemon/events.h naemon-core-1.4.4.new/src/naemon/events.h
+--- naemon-core-1.4.4.orig/src/naemon/events.h	2024-10-26 10:36:46.449365453 +0200
++++ naemon-core-1.4.4.new/src/naemon/events.h	2024-10-26 11:08:47.717719475 +0200
 @@ -5,6 +5,8 @@
  #error "Only <naemon/naemon.h> can be included directly."
  #endif
@@ -21,3 +21,25 @@ diff -ura naemon-core-1.4.2.orig/src/naemon/events.h naemon-core-1.4.2.new/src/n
 +
  #include "lib/lnae-utils.h"
  #include "lib/iobroker.h"
+diff -ura naemon-livestatus-1.4.4.orig/src/AndingFilter.h naemon-livestatus-1.4.4.new/src/AndingFilter.h
+--- naemon-livestatus-1.4.4.orig/src/AndingFilter.h	2025-09-03 11:32:41.303412986 +0200
++++ naemon-livestatus-1.4.4.new/src/AndingFilter.h	2025-09-03 11:32:35.510116733 +0200
+@@ -5,6 +5,7 @@
+ #ifndef AndingFilter_h
+ #define AndingFilter_h
+ 
++#include "<sys/time.h>"
+ #include "config.h"
+ 
+ #include "Filter.h"
+diff -ura naemon-livestatus-1.4.4.orig/src/Filter.h naemon-livestatus-1.4.4.new/src/Filter.h
+--- naemon-livestatus-1.4.4.orig/src/Filter.h	2025-09-03 11:32:41.305183315 +0200
++++ naemon-livestatus-1.4.4.new/src/Filter.h	2025-09-03 11:32:35.510116733 +0200
+@@ -5,6 +5,7 @@
+ #ifndef Filter_h
+ #define Filter_h
+ 
++#include "<sys/time.h>"
+ #include "config.h"
+ 
+ #include <vector>
