@@ -41,6 +41,7 @@ COPY templates/hosts.cfg /build/target/etc/naemon/conf.d/templates/hosts.cfg
 COPY templates/services.cfg /build/target/etc/naemon/conf.d/templates/services.cfg
 COPY templates/naemon.cfg /build/target/etc/naemon/naemon.cfg
 COPY templates/resource.cfg /build/target/etc/naemon/resource.cfg
+COPY files/naemon-livestatus_include_time_h.patch /build/naemon-livestatus_include_time_h.patch
 RUN cd /build && \
 	curl -sSL -o naemon-livestatus-v${NAEMON_VERSION}.tar.gz https://github.com/naemon/naemon-livestatus/archive/refs/tags/v${NAEMON_VERSION}.tar.gz && \
 	tar -xzf naemon-livestatus-v${NAEMON_VERSION}.tar.gz && \
