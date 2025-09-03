@@ -20,3 +20,14 @@ diff -ura naemon-livestatus-1.4.4.orig/src/Filter.h naemon-livestatus-1.4.4.new/
  #include <vector>
  #include <string>
  #include <stdint.h>
+diff -ura naemon-livestatus-1.4.4.orig/src/TimeColumn.h naemon-livestatus-1.4.4.new/src/TimeColumn.h
+--- naemon-livestatus-1.4.4.orig/src/TimeColumn.h	2025-09-03 11:32:41.310183373 +0200
++++ naemon-livestatus-1.4.4.new/src/TimeColumn.h	2025-09-03 12:04:36.515680358 +0200
+@@ -10,6 +10,7 @@
+ #include <stdint.h>
+ 
+ #include "Column.h"
++#include <ctime>
+ 
+ class TimeColumn : public Column
+ {
